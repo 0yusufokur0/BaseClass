@@ -108,7 +108,30 @@ open class BaseAdapter<T, viewDataBinding : ViewDataBinding>(
     }
 
     override fun getFilter(): Filter {
-        TODO("Not yet implemented")
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val filteredList = ArrayList<T>()
+                if (constraint == null || constraint.isEmpty()) {
+                    filteredList.addAll(currentList)
+                } else {
+                    val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
+                    for (item in currentList) {
+                        if (item.toString().toLowerCase().contains(filterPattern)) {
+                            filteredList.add(item)
+                        }
+                    }
+                }
+                val results = FilterResults()
+                results.values = filteredList
+                return results
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                currentList.clear()
+                currentList.addAll(results?.values as List<T>)
+                notifyDataSetChanged()
+            }
+        }
     }
 }
 

@@ -26,7 +26,6 @@ import android.media.RingtoneManager
 import android.webkit.MimeTypeMap
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import com.yenen.ahmet.basecorelibrary.base.local.LocaleManager
 import com.yenen.ahmet.basecorelibrary.base.utility.FileUtils
 import com.yenen.ahmet.basecorelibrary.base.utility.FileUtils.getUri
 
@@ -398,8 +397,9 @@ fun AppCompatActivity.openNavigationYandexMap(latitude: String, longitude: Strin
 }
 
 
+/*
 fun AppCompatActivity.setNewLocale(language: String, localeManager: LocaleManager) {
     localeManager.setNewLocale(this, language)
     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
     finish()
-}
+}*/
