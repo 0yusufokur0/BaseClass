@@ -1,4 +1,4 @@
-package com.yenen.ahmet.basecorelibrary.base.utility
+package com.resurrection.baseclass.base.util
 
 import android.content.Context
 import android.graphics.Bitmap

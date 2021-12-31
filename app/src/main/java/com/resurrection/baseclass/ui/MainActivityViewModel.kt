@@ -1,8 +1,6 @@
 package com.resurrection.baseclass.ui
 
-import androidx.lifecycle.viewModelScope
-import com.resurrection.baseclass.base.core.BaseViewModel
-import kotlinx.coroutines.launch
+import com.resurrection.imkb.ui.base.core.BaseViewModel
 
 class MainActivityViewModel : BaseViewModel() {
 

@@ -1,22 +1,25 @@
-package com.resurrection.baseclass.base.core
+package com.resurrection.imkb.ui.base.core
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.resurrection.baseclass.base.core.BaseAdapter.*
+import com.resurrection.baseclass.base.AppSession
+import javax.inject.Inject
 
 open class BaseAdapter<T, viewDataBinding : ViewDataBinding>(
-    @LayoutRes var layoutResource: Int,
-    var currentList: MutableList<T>,
+    var layoutResource: Int,
+    var currentList: ArrayList<T>,
     var itemId: Int,
     var onItemClick: (T) -> Unit
-) : RecyclerView.Adapter<BaseHolder<T>>(), Filterable {
+) : RecyclerView.Adapter<BaseAdapter.BaseHolder<T>>(),Filterable {
+
+    @Inject
+    lateinit var appSession: AppSession
 
     lateinit var binding: viewDataBinding
 
@@ -27,16 +30,12 @@ open class BaseAdapter<T, viewDataBinding : ViewDataBinding>(
             parent,
             false
         )
-
         return BaseHolder(binding, itemId, onItemClick)
     }
 
-    override fun onBindViewHolder(holder: BaseHolder<T>, position: Int) {
-        holder.bind(currentList[position])
+    override fun onBindViewHolder(holder: BaseHolder<T>, position: Int) { holder.bind(currentList[position]) }
 
-    }
-
-    override fun getItemCount(): Int = currentList.size
+    override fun getItemCount() = currentList.size
 
     fun updateList(newList: ArrayList<T>) {
         val diffCallBack = BaseDiffUtil<T>(currentList, newList)
@@ -44,7 +43,7 @@ open class BaseAdapter<T, viewDataBinding : ViewDataBinding>(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    fun removeItem(item: T) {
+/*    fun removeItem(item: T) {
         val pos = getItemPosition(item)
         if (pos > -1) {
             currentList.remove(item)
@@ -60,23 +59,7 @@ open class BaseAdapter<T, viewDataBinding : ViewDataBinding>(
             notifyItemInserted(pos)
             notifyItemRangeChanged(pos, itemCount)
         }
-    }
-
-    private fun getItemPosition(item: T): Int {
-        if (currentList.isNotEmpty()) {
-            var i = 0
-            var pos = -1
-            for (value in currentList) {
-                if (item == value) {
-                    pos = i
-                    break
-                }
-                i++
-            }
-            return pos
-        }
-        return -1
-    }
+    }*/
 
     class BaseHolder<T>(
         private var binding: ViewDataBinding,
@@ -91,20 +74,13 @@ open class BaseAdapter<T, viewDataBinding : ViewDataBinding>(
     }
 
     class BaseDiffUtil<T>(
-        private val oldNumbers: List<T>,
-        private val newNumbers: List<T>
+        private val oldList: List<T>,
+        private val newList: List<T>
     ) : DiffUtil.Callback() {
-
-        override fun getOldListSize(): Int = oldNumbers.size
-
-        override fun getNewListSize(): Int = newNumbers.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldNumbers[oldItemPosition] == newNumbers[newItemPosition]
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldNumbers[oldItemPosition] == newNumbers[newItemPosition]
-
+        override fun getOldListSize(): Int = oldList.size
+        override fun getNewListSize(): Int = newList.size
+        override fun areItemsTheSame(oldPosition: Int, newPosition: Int) = oldList[oldPosition] == newList[newPosition]
+        override fun areContentsTheSame(oldPosition: Int, newPosition: Int) = oldList[oldPosition] == newList[newPosition]
     }
 
     override fun getFilter(): Filter {
@@ -114,7 +90,7 @@ open class BaseAdapter<T, viewDataBinding : ViewDataBinding>(
                 if (constraint == null || constraint.isEmpty()) {
                     filteredList.addAll(currentList)
                 } else {
-                    val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
+                    val filterPattern = constraint.toString().toLowerCase().trim()
                     for (item in currentList) {
                         if (item.toString().toLowerCase().contains(filterPattern)) {
                             filteredList.add(item)
@@ -128,7 +104,7 @@ open class BaseAdapter<T, viewDataBinding : ViewDataBinding>(
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 currentList.clear()
-                currentList.addAll(results?.values as List<T>)
+                currentList.addAll(results?.values as ArrayList<T>)
                 notifyDataSetChanged()
             }
         }

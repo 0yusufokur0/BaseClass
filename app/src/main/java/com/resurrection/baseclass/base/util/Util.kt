@@ -1,4 +1,4 @@
-package com.resurrection.baseclass.util.core
+package com.resurrection.baseclass.base.util
 
 import android.app.Activity
 import android.content.Context
@@ -9,37 +9,26 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.resurrection.baseclass.R
 
-
 fun isNetworkAvailable(context: Context): Boolean {
+    try {
     val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val capabilities =
         connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-    if (capabilities != null) {
-        return when {
+    return if (capabilities != null) {
+        when {
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
             else -> true
         }
-    }else return true
-}
-
-fun toast(context: Context, message: String): Toast {
-    var toast: Toast =
-        Toast.makeText(context, message, Toast.LENGTH_SHORT)
-    toast.show()
-    return toast
-}
-
-fun Context.hideKeyboard(view: View) {
-    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }else false
+    }catch (e:Exception){
+        return false
+    }
 }
 
 fun Any.isValid(): Boolean {
@@ -52,11 +41,8 @@ fun Any.isValid(): Boolean {
 
         val value = fields[i].get(this)
 
-        Log.w(
-            "Msg", "Value of Field "
-                    + fields[i].name
-                    + " is " + value
-        )
+        Log.w("Msg", "Value of Field " + fields[i].name + " is " + value)
+
         if (value == 0 || value == 0.0 || value == "" || value == null) {
             isValid = false
         }
@@ -75,16 +61,3 @@ fun Activity.changeStatusBarColor(color: Int = R.color.black) {
     window.statusBarColor = ContextCompat.getColor(this, color)
 }
 
-fun tryCatch(func:()->Unit){
-    try {
-        func()
-    }catch (e:Exception){
-        ThrowableError(e.toString())
-    }
-}
-
-
-
-class ThrowableError(msg:String):Throwable(msg){
-    init { Log.e("ThrowableError",msg) }
-}

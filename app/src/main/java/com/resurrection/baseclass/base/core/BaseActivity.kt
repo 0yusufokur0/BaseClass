@@ -1,27 +1,29 @@
 package com.resurrection.baseclass.base.core
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.resurrection.baseclass.App
-import kotlin.system.exitProcess
+import androidx.lifecycle.*
+import com.resurrection.baseclass.base.AppSession
 
+import com.resurrection.imkb.ui.base.util.Constants
+import javax.inject.Inject
 
 abstract class BaseActivity<VDB : ViewDataBinding,VM : ViewModel>
     (@LayoutRes private val layoutRes: Int,
      private val viewModelClass: Class<VM>
-) : AppCompatActivity() {
+) : AppCompatActivity() , LifecycleEventObserver {
+
+    @Inject
+    lateinit var appSession: AppSession
+
+    lateinit var binding: VDB
 
     protected val viewModel by lazy {
         ViewModelProvider(this).get(viewModelClass)
     }
-
-    open lateinit var binding: VDB
 
     abstract fun init(savedInstanceState: Bundle?)
 
@@ -30,24 +32,13 @@ abstract class BaseActivity<VDB : ViewDataBinding,VM : ViewModel>
         binding = DataBindingUtil.setContentView(this, layoutRes)
         init(savedInstanceState)
     }
-    protected fun startActivity(sClass: Class<*>, bundle: Bundle? = null) {
-        val intent = Intent(this, sClass)
-        bundle?.let { intent.putExtras(bundle) }
-        startActivity(intent)
+
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        when(event){
+            Lifecycle.Event.ON_START -> appSession.dataHolder.putBoolean(Constants.IS_APP_FOREGROUND, true)
+            Lifecycle.Event.ON_STOP -> appSession.dataHolder.putBoolean(Constants.IS_APP_FOREGROUND, false)
+            else -> { }
+        }
     }
-
-    protected fun reStartApp(sClass: Class<*>) {
-        val intent = Intent(applicationContext, sClass)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        finish()
-        exitProcess(0)
-    }
-
-    fun getApp(): App {
-        return application as App
-    }
-
-
 
 }

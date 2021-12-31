@@ -1,6 +1,7 @@
-package com.yenen.ahmet.basecorelibrary.base.extension
+package com.resurrection.baseclass.ext
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -10,9 +11,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.provider.Settings
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import java.io.File
@@ -26,8 +24,10 @@ import android.media.RingtoneManager
 import android.webkit.MimeTypeMap
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import com.yenen.ahmet.basecorelibrary.base.utility.FileUtils
-import com.yenen.ahmet.basecorelibrary.base.utility.FileUtils.getUri
+import com.resurrection.baseclass.base.util.FileUtils
+import com.resurrection.baseclass.base.util.FileUtils.getUri
+import com.resurrection.imkb.ui.base.general.toast
+import kotlin.system.exitProcess
 
 
 fun AppCompatActivity.openWebUrl(url: String): Boolean {
@@ -268,20 +268,6 @@ fun AppCompatActivity.getFileSize(uri: Uri): String {
     return size
 }
 
-fun AppCompatActivity.showToast(text: String) {
-    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-}
-
-fun AppCompatActivity.showToast(redId: Int) {
-    Toast.makeText(this, getString(redId), Toast.LENGTH_LONG).show()
-}
-
-fun AppCompatActivity.hideKeyboard() {
-    currentFocus?.let {
-        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        inputManager?.hideSoftInputFromWindow(it.windowToken, 0)
-    }
-}
 
 fun AppCompatActivity.screenBarClear() {
     WindowCompat.setDecorFitsSystemWindows(window,false)
@@ -297,7 +283,7 @@ fun AppCompatActivity.shareFacebookMessenger(id: Long, warningMessage: String) {
         }
         startActivity(intent)
     } else {
-        showToast(warningMessage)
+        toast(warningMessage)
         val uri = Uri.parse("market://details?id=com.facebook.orca")
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent);
@@ -313,7 +299,7 @@ fun AppCompatActivity.shareTwitter(warningMessage: String, message: String) {
         }
         startActivity(tweetIntent)
     } else {
-        showToast(warningMessage)
+        toast(warningMessage)
         val uri = Uri.parse("market://details?id=com.twitter.android")
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)
@@ -325,7 +311,7 @@ fun AppCompatActivity.shareBip(warningMessage: String, mUri: Uri) {
         val intent = Intent(Intent.ACTION_VIEW, mUri)
         startActivity(intent)
     } else {
-        showToast(warningMessage)
+        toast(warningMessage)
         val uri = Uri.parse("market://details?id=com.turkcell.bip")
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)
@@ -403,3 +389,32 @@ fun AppCompatActivity.setNewLocale(language: String, localeManager: LocaleManage
     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
     finish()
 }*/
+
+
+fun Context.startActivity(sClass: Class<*>) = startActivity(Intent(this, sClass))
+
+fun Activity.reStartApp(sClass: Class<*>) {
+    val intent = Intent(applicationContext, sClass)
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+    startActivity(intent)
+    finish()
+    exitProcess(0)
+}
+
+fun Activity.startActivityForResult(sClass: Class<*>, requestCode: Int) = startActivityForResult(Intent(this, sClass), requestCode)
+
+fun Fragment.startActivity(sClass: Class<*>) = activity?.startActivity(sClass)
+
+fun Fragment.startActivityForResult(sClass: Class<*>, requestCode: Int) = requireActivity().startActivityForResult(
+    Intent(activity, sClass), requestCode)
+
+fun Fragment.reStartApp(sClass: Class<*>)  = requireActivity().reStartApp(sClass)
+
+// Service
+fun Context.startService(sClass: Class<*>) = startService(Intent(this, sClass))
+
+fun Context.stopService(sClass: Class<*>) = stopService(Intent(this, sClass))
+
+// Broadcast
+fun Context.sendBroadcast(sClass: Class<*>) = sendBroadcast(Intent(this, sClass))
+

@@ -1,4 +1,4 @@
-package com.resurrection.baseclass.util.core
+package com.resurrection.imkb.ui.base.util
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

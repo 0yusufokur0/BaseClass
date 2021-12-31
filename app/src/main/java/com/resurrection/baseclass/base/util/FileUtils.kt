@@ -1,4 +1,4 @@
-package com.yenen.ahmet.basecorelibrary.base.utility
+package com.resurrection.baseclass.base.util
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -13,7 +13,6 @@ import android.util.Base64
 import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
-import com.resurrection.baseclass.R
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -21,6 +20,9 @@ import java.io.IOException
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+interface CovertFileToBase64Listener {
+    fun onResult(base64:String?)
+}
 
 object FileUtils {
 
@@ -154,7 +156,7 @@ object FileUtils {
     }
 
 
-    fun convertFileToBase64(filePath: String,listener:CovertFileToBase64Listener) {
+    fun convertFileToBase64(filePath: String,listener: CovertFileToBase64Listener) {
        val thread = Thread(Runnable {
             BitmapFactory.decodeFile(filePath)?.let {
                 val os = ByteArrayOutputStream()

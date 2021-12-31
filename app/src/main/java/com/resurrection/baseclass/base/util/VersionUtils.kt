@@ -1,4 +1,4 @@
-package com.yenen.ahmet.basecorelibrary.base.utility
+package com.resurrection.baseclass.base.util
 
 import android.app.Application
 import android.app.PendingIntent

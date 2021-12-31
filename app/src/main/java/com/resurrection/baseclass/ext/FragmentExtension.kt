@@ -15,8 +15,8 @@ import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import com.yenen.ahmet.basecorelibrary.base.utility.FileUtils
-import com.yenen.ahmet.basecorelibrary.base.utility.FileUtils.getUri
+import com.resurrection.baseclass.base.util.FileUtils
+import com.resurrection.baseclass.base.util.FileUtils.getUri
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -200,11 +200,11 @@ fun Fragment.openRingToneScreen(
     return false
 }
 
-fun Fragment.showToast(text: String) {
+fun Fragment.toast(text: String) {
     Toast.makeText(activity, text, Toast.LENGTH_LONG).show()
 }
 
-fun Fragment.showToast(redId: Int) {
+fun Fragment.toast(redId: Int) {
     Toast.makeText(activity, getString(redId), Toast.LENGTH_LONG).show()
 }
 
@@ -249,7 +249,7 @@ fun Fragment.openUserFacebookMessenger(id: Long, warningMessage: String) {
         }
         startActivity(intent)
     } else {
-        showToast(warningMessage)
+        toast(warningMessage)
         val uri = Uri.parse("market://details?id=com.facebook.orca")
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent);
@@ -265,7 +265,7 @@ fun Fragment.shareTwitter(warningMessage: String, message: String) {
         }
         startActivity(tweetIntent)
     } else {
-        showToast(warningMessage)
+        toast(warningMessage)
         val uri = Uri.parse("market://details?id=com.twitter.android")
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)
@@ -314,7 +314,7 @@ fun Fragment.shareBip(warningMessage: String, mUri: Uri) {
         val intent = Intent(Intent.ACTION_VIEW, mUri)
         startActivity(intent)
     } else {
-        showToast(warningMessage)
+        toast(warningMessage)
         val uri = Uri.parse("market://details?id=com.turkcell.bip")
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)

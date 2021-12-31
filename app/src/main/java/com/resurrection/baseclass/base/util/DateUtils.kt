@@ -1,4 +1,4 @@
-package com.yenen.ahmet.basecorelibrary.base.utility
+package com.resurrection.baseclass.base.util
 
 import android.annotation.SuppressLint
 import java.lang.Exception

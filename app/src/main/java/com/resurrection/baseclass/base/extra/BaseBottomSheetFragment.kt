@@ -1,6 +1,6 @@
+package com.resurrection.baseclass.base.extra
 
 /*
-package com.resurrection.baseclass.base.extra
 
 import android.os.Bundle
 import android.view.LayoutInflater
